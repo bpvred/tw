@@ -83,17 +83,23 @@ const rest = new REST({
 
 async function registrar(){
 
-    await rest.put(
-        Routes.applicationGuildCommands(
-            CLIENT_ID,
-            GUILD_ID
-        ),
-        {
-            body: commands
-        }
-    );
+    try {
 
-    console.log("Comandos registrados!");
+        await rest.put(
+            Routes.applicationGuildCommands(
+                CLIENT_ID,
+                GUILD_ID
+            ),
+            {
+                body: commands.map(command => command.toJSON())
+            }
+        );
+
+        console.log("Comandos registrados!");
+
+    } catch(error) {
+        console.log(error);
+    }
 
 }
 
