@@ -351,7 +351,7 @@ if(interaction.isModalSubmit()){
         });
 
       }
-});
+}
 
 registrar();
 
