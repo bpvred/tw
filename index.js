@@ -29,9 +29,9 @@ const client = new Client({
 
 const commands = [
 
-    new SlashCommandBuilder()
-    .setName("ping")
-    .setDescription("Mostra o ping do bot"),
+   new SlashCommandBuilder()
+.setName("anunciar")
+.setDescription("Enviar um anúncio")
 
 
     new SlashCommandBuilder()
