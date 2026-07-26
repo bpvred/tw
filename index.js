@@ -4,7 +4,8 @@ const {
     REST,
     Routes,
     SlashCommandBuilder,
-    ActivityType
+    ActivityType,
+    EmbedBuilder
 } = require("discord.js");
 
 
@@ -164,9 +165,18 @@ client.on("interactionCreate", async interaction => {
         interaction.options.getString("mensagem");
 
 
+        const embed = new EmbedBuilder()
+        .setColor("#ff0000")
+        .setTitle("📢 ANÚNCIO PLAY VÍCIO")
+        .setDescription(mensagem)
+        .setFooter({
+            text:"Brasil Play Vício RP"
+        })
+        .setTimestamp();
+
+
         await interaction.channel.send({
-            content:
-            `📢 **ANÚNCIO PLAY VÍCIO**\n\n${mensagem}`
+            embeds:[embed]
         });
 
 
