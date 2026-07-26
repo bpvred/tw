@@ -350,11 +350,9 @@ if(interaction.isModalSubmit()){
             ephemeral:true
         });
 
-    }
-
-}
+      }
+});
 
 registrar();
-
 
 client.login(TOKEN);
