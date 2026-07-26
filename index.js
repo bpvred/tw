@@ -29,20 +29,14 @@ const client = new Client({
 
 const commands = [
 
-   new SlashCommandBuilder()
-.setName("anunciar")
-.setDescription("Enviar um anúncio")
+    new SlashCommandBuilder()
+    .setName("ping")
+    .setDescription("Mostra o ping do bot"),
 
 
     new SlashCommandBuilder()
     .setName("anunciar")
-    .setDescription("Envia um anúncio")
-    .addStringOption(option =>
-        option
-        .setName("mensagem")
-        .setDescription("Mensagem")
-        .setRequired(true)
-    ),
+    .setDescription("Enviar um anúncio"),
 
 
     new SlashCommandBuilder()
@@ -139,7 +133,37 @@ client.once("ready",()=>{
 client.on("interactionCreate", async interaction => {
 
     if(!interaction.isChatInputCommand()) return;
+if(interaction.commandName === "anunciar"){
 
+    if(!interaction.member.permissions.has("Administrator"))
+    return interaction.reply({
+        content:"❌ Sem permissão",
+        ephemeral:true
+    });
+
+
+    const modal = new ModalBuilder()
+    .setCustomId("anuncio_modal")
+    .setTitle("Enviar anúncio");
+
+
+    const mensagem = new TextInputBuilder()
+    .setCustomId("mensagem_anuncio")
+    .setLabel("Mensagem do anúncio")
+    .setStyle(TextInputStyle.Paragraph)
+    .setRequired(true);
+
+
+    const linha = new ActionRowBuilder()
+    .addComponents(mensagem);
+
+
+    modal.addComponents(linha);
+
+
+    await interaction.showModal(modal);
+
+}
 
 
     if(interaction.commandName === "ping"){
@@ -274,7 +298,32 @@ await interaction.channel.send({
 
 });
 
+if(interaction.isModalSubmit()){
 
+    if(interaction.customId === "anuncio_modal"){
+
+        const mensagem =
+        interaction.fields.getTextInputValue("mensagem_anuncio");
+
+
+        const embed = new EmbedBuilder()
+        .setColor("#ff0000");
+
+
+        await interaction.channel.send({
+            content: mensagem,
+            embeds:[embed]
+        });
+
+
+        return interaction.reply({
+            content:"✅ Anúncio enviado!",
+            ephemeral:true
+        });
+
+    }
+
+}
 
 registrar();
 
