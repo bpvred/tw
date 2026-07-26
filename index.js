@@ -25,6 +25,8 @@ const client = new Client({
     ]
 });
 
+
+
 const commands = [
 
     new SlashCommandBuilder()
@@ -34,7 +36,7 @@ const commands = [
 
     new SlashCommandBuilder()
     .setName("anunciar")
-    .setDescription("Enviar um anúncio"),
+    .setDescription("Enviar anúncio"),
 
 
     new SlashCommandBuilder()
@@ -84,9 +86,11 @@ const commands = [
 ];
 
 
+
 const rest = new REST({
     version:"10"
 }).setToken(TOKEN);
+
 
 
 async function registrar(){
@@ -106,12 +110,12 @@ async function registrar(){
         console.log("Comandos registrados!");
 
     }catch(error){
-
         console.log(error);
-
     }
 
 }
+
+
 
 client.once("ready",()=>{
 
@@ -127,23 +131,34 @@ client.once("ready",()=>{
 });
 
 
+
+
 client.on("interactionCreate", async interaction => {
 
+
+
+    // MODAL DO ANÚNCIO
 
     if(interaction.isModalSubmit()){
 
         if(interaction.customId === "anuncio_modal"){
 
+
             const mensagem =
-            interaction.fields.getTextInputValue("mensagem_anuncio");
+            interaction.fields.getTextInputValue(
+                "mensagem_anuncio"
+            );
 
 
             const embed = new EmbedBuilder()
-            .setColor("#ff0000");
+            .setColor("#ff0000")
+            .setDescription(mensagem)
+            .setFooter({
+                text:"Anúncio oficial"
+            });
 
 
             await interaction.channel.send({
-                content: mensagem,
                 embeds:[embed]
             });
 
@@ -158,16 +173,26 @@ client.on("interactionCreate", async interaction => {
     }
 
 
+
+
     if(!interaction.isChatInputCommand()) return;
 
 
+
+    // ANUNCIAR
+
     if(interaction.commandName === "anunciar"){
 
-        if(!interaction.member.permissions.has("Administrator"))
-        return interaction.reply({
-            content:"❌ Sem permissão",
-            ephemeral:true
-        });
+
+        if(!interaction.member.permissions.has("Administrator")){
+
+            return interaction.reply({
+                content:"❌ Sem permissão",
+                ephemeral:true
+            });
+
+        }
+
 
 
         const modal = new ModalBuilder()
@@ -175,15 +200,19 @@ client.on("interactionCreate", async interaction => {
         .setTitle("Enviar anúncio");
 
 
+
         const mensagem = new TextInputBuilder()
         .setCustomId("mensagem_anuncio")
         .setLabel("Mensagem do anúncio")
         .setStyle(TextInputStyle.Paragraph)
+        .setPlaceholder("Digite o anúncio aqui...")
         .setRequired(true);
+
 
 
         const linha = new ActionRowBuilder()
         .addComponents(mensagem);
+
 
 
         modal.addComponents(linha);
@@ -191,9 +220,15 @@ client.on("interactionCreate", async interaction => {
 
         return interaction.showModal(modal);
 
-    } 
+    }
 
-              if(interaction.commandName === "ping"){
+
+
+
+
+    // PING
+
+    if(interaction.commandName === "ping"){
 
         return interaction.reply(
             `🏓 Pong! ${client.ws.ping}ms`
@@ -203,13 +238,21 @@ client.on("interactionCreate", async interaction => {
 
 
 
+
+
+    // BAN
+
     if(interaction.commandName === "ban"){
 
-        if(!interaction.member.permissions.has("BanMembers"))
-        return interaction.reply({
-            content:"❌ Sem permissão",
-            ephemeral:true
-        });
+
+        if(!interaction.member.permissions.has("BanMembers")){
+
+            return interaction.reply({
+                content:"❌ Sem permissão",
+                ephemeral:true
+            });
+
+        }
 
 
         const user =
@@ -224,9 +267,11 @@ client.on("interactionCreate", async interaction => {
         await interaction.guild.members.fetch(user.id);
 
 
+
         await membro.ban({
-            reason: motivo
+            reason:motivo
         });
+
 
 
         return interaction.reply(
@@ -237,13 +282,21 @@ client.on("interactionCreate", async interaction => {
 
 
 
+
+
+    // KICK
+
     if(interaction.commandName === "kick"){
 
-        if(!interaction.member.permissions.has("KickMembers"))
-        return interaction.reply({
-            content:"❌ Sem permissão",
-            ephemeral:true
-        });
+
+        if(!interaction.member.permissions.has("KickMembers")){
+
+            return interaction.reply({
+                content:"❌ Sem permissão",
+                ephemeral:true
+            });
+
+        }
 
 
         const user =
@@ -254,7 +307,9 @@ client.on("interactionCreate", async interaction => {
         await interaction.guild.members.fetch(user.id);
 
 
+
         await membro.kick();
+
 
 
         return interaction.reply(
@@ -265,13 +320,22 @@ client.on("interactionCreate", async interaction => {
 
 
 
+
+
+    // TIMEOUT
+
     if(interaction.commandName === "timeout"){
 
-        if(!interaction.member.permissions.has("ModerateMembers"))
-        return interaction.reply({
-            content:"❌ Sem permissão",
-            ephemeral:true
-        });
+
+        if(!interaction.member.permissions.has("ModerateMembers")){
+
+            return interaction.reply({
+                content:"❌ Sem permissão",
+                ephemeral:true
+            });
+
+        }
+
 
 
         const membro =
@@ -282,9 +346,11 @@ client.on("interactionCreate", async interaction => {
         interaction.options.getInteger("minutos");
 
 
+
         await membro.timeout(
             minutos * 60000
         );
+
 
 
         return interaction.reply(
@@ -293,7 +359,9 @@ client.on("interactionCreate", async interaction => {
 
     }
 
-          });
+
+});
+
 
 
 registrar();
