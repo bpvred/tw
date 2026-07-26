@@ -327,8 +327,6 @@ await interaction.channel.send({
 
     }
 
-});
-
 if(interaction.isModalSubmit()){
 
     if(interaction.customId === "anuncio_modal"){
