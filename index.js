@@ -15,7 +15,7 @@ const GUILD_ID = "1521884010479882321";
 
 
 const client = new Client({
-    intents: [
+    intents:[
         GatewayIntentBits.Guilds,
         GatewayIntentBits.GuildMembers
     ]
@@ -31,55 +31,59 @@ const commands = [
 
 
     new SlashCommandBuilder()
-    .setName("ban")
-    .setDescription("Bane um usuário")
-    .addUserOption(option =>
-        option.setName("usuario")
-        .setDescription("Usuário")
-        .setRequired(true))
+    .setName("anunciar")
+    .setDescription("Envia um anúncio")
     .addStringOption(option =>
-        option.setName("motivo")
+        option
+        .setName("mensagem")
+        .setDescription("Mensagem")
+        .setRequired(true)
+    ),
+
+
+    new SlashCommandBuilder()
+    .setName("ban")
+    .setDescription("Bane usuário")
+    .addUserOption(option =>
+        option
+        .setName("usuario")
+        .setDescription("Usuário")
+        .setRequired(true)
+    )
+    .addStringOption(option =>
+        option
+        .setName("motivo")
         .setDescription("Motivo")
-        .setRequired(true)),
+        .setRequired(true)
+    ),
 
 
     new SlashCommandBuilder()
     .setName("kick")
-    .setDescription("Expulsa um usuário")
+    .setDescription("Expulsa usuário")
     .addUserOption(option =>
-        option.setName("usuario")
+        option
+        .setName("usuario")
         .setDescription("Usuário")
-        .setRequired(true))
-    .addStringOption(option =>
-        option.setName("motivo")
-        .setDescription("Motivo")
-        .setRequired(true)),
+        .setRequired(true)
+    ),
 
 
     new SlashCommandBuilder()
     .setName("timeout")
-    .setDescription("Dá castigo em alguém")
+    .setDescription("Castiga usuário")
     .addUserOption(option =>
-        option.setName("usuario")
+        option
+        .setName("usuario")
         .setDescription("Usuário")
-        .setRequired(true))
+        .setRequired(true)
+    )
     .addIntegerOption(option =>
-        option.setName("minutos")
+        option
+        .setName("minutos")
         .setDescription("Minutos")
-        .setRequired(true))
-    .addStringOption(option =>
-        option.setName("motivo")
-        .setDescription("Motivo")
-        .setRequired(true)),
-
-
-    new SlashCommandBuilder()
-    .setName("anunciar")
-    .setDescription("Envia um anúncio")
-    .addStringOption(option =>
-        option.setName("mensagem")
-        .setDescription("Mensagem do anúncio")
-        .setRequired(true))
+        .setRequired(true)
+    )
 
 ];
 
@@ -93,7 +97,7 @@ const rest = new REST({
 
 async function registrar(){
 
-    try {
+    try{
 
         await rest.put(
             Routes.applicationGuildCommands(
@@ -101,13 +105,13 @@ async function registrar(){
                 GUILD_ID
             ),
             {
-                body: commands.map(command => command.toJSON())
+                body: commands.map(c => c.toJSON())
             }
         );
 
         console.log("Comandos registrados!");
 
-    } catch(error) {
+    }catch(error){
         console.log(error);
     }
 
@@ -115,12 +119,9 @@ async function registrar(){
 
 
 
-client.once("ready", ()=>{
+client.once("ready",()=>{
 
-    console.log(
-        `TW ONLINE: ${client.user.tag}`
-    );
-
+    console.log(`TW ONLINE: ${client.user.tag}`);
 
     client.user.setActivity(
         "Protegendo o servidor ⚡",
@@ -131,12 +132,7 @@ client.once("ready", ()=>{
 
 });
 
-
-
-
-
 client.on("interactionCreate", async interaction => {
-
 
     if(!interaction.isChatInputCommand()) return;
 
@@ -161,18 +157,13 @@ client.on("interactionCreate", async interaction => {
         });
 
 
-        const mensagem =
+        const msg =
         interaction.options.getString("mensagem");
 
 
         const embed = new EmbedBuilder()
         .setColor("#ff0000")
-        .setTitle("📢 ANÚNCIO PLAY VÍCIO")
-        .setDescription(mensagem)
-        .setFooter({
-            text:"Brasil Play Vício RP"
-        })
-        .setTimestamp();
+        .setDescription(msg);
 
 
         await interaction.channel.send({
@@ -181,7 +172,7 @@ client.on("interactionCreate", async interaction => {
 
 
         return interaction.reply({
-            content:"✅ Anúncio enviado!",
+            content:"✅",
             ephemeral:true
         });
 
@@ -189,10 +180,7 @@ client.on("interactionCreate", async interaction => {
 
 
 
-
-
     if(interaction.commandName === "ban"){
-
 
         if(!interaction.member.permissions.has("BanMembers"))
         return interaction.reply({
@@ -214,23 +202,19 @@ client.on("interactionCreate", async interaction => {
 
 
         await membro.ban({
-            reason: motivo
+            reason:motivo
         });
 
 
-        interaction.reply(
-            `🔨 ${user.tag} foi banido\n📄 Motivo: ${motivo}`
+        return interaction.reply(
+            `🔨 ${user.tag} foi banido`
         );
-
 
     }
 
 
 
-
-
     if(interaction.commandName === "kick"){
-
 
         if(!interaction.member.permissions.has("KickMembers"))
         return interaction.reply({
@@ -243,38 +227,28 @@ client.on("interactionCreate", async interaction => {
         interaction.options.getUser("usuario");
 
 
-        const motivo =
-        interaction.options.getString("motivo");
-
-
         const membro =
         await interaction.guild.members.fetch(user.id);
 
 
+        await membro.kick();
 
-        await membro.kick(motivo);
 
-
-        interaction.reply(
+        return interaction.reply(
             `👢 ${user.tag} foi expulso`
         );
-
 
     }
 
 
 
-
-
     if(interaction.commandName === "timeout"){
-
 
         if(!interaction.member.permissions.has("ModerateMembers"))
         return interaction.reply({
             content:"❌ Sem permissão",
             ephemeral:true
         });
-
 
 
         const membro =
@@ -285,24 +259,16 @@ client.on("interactionCreate", async interaction => {
         interaction.options.getInteger("minutos");
 
 
-        const motivo =
-        interaction.options.getString("motivo");
-
-
-
         await membro.timeout(
-            minutos * 60000,
-            motivo
+            minutos * 60000
         );
 
 
-        interaction.reply(
-            `🔇 ${membro.user.tag} tomou castigo por ${minutos} minutos`
+        return interaction.reply(
+            `🔇 ${membro.user.tag} tomou timeout`
         );
-
 
     }
-
 
 });
 
