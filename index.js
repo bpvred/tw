@@ -218,8 +218,8 @@ client.on("interactionCreate", async interaction => {
         modal.addComponents(linha);
 
 
-        return interaction.showModal(modal);
-
+        await interaction.showModal(modal);
+return;
     }
 
 
