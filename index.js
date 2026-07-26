@@ -15,7 +15,7 @@ const {
 
 const TOKEN = process.env.TOKEN;
 const CLIENT_ID = "1530235909772148867";
-const GUILD_ID = "1521884010479882321";
+const GUILD_ID = "1282859172878356532";
 
 
 const client = new Client({
