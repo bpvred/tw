@@ -25,8 +25,6 @@ const client = new Client({
     ]
 });
 
-
-
 const commands = [
 
     new SlashCommandBuilder()
@@ -86,11 +84,9 @@ const commands = [
 ];
 
 
-
 const rest = new REST({
     version:"10"
 }).setToken(TOKEN);
-
 
 
 async function registrar(){
@@ -110,12 +106,12 @@ async function registrar(){
         console.log("Comandos registrados!");
 
     }catch(error){
+
         console.log(error);
+
     }
 
 }
-
-
 
 client.once("ready",()=>{
 
@@ -129,6 +125,7 @@ client.once("ready",()=>{
     );
 
 });
+
 
 client.on("interactionCreate", async interaction => {
 
@@ -166,49 +163,6 @@ client.on("interactionCreate", async interaction => {
 
     if(interaction.commandName === "anunciar"){
 
-    if(!interaction.member.permissions.has("Administrator"))
-    return interaction.reply({
-        content:"❌ Sem permissão",
-        ephemeral:true
-    });
-
-
-    const modal = new ModalBuilder()
-    .setCustomId("anuncio_modal")
-    .setTitle("Enviar anúncio");
-
-
-    const mensagem = new TextInputBuilder()
-    .setCustomId("mensagem_anuncio")
-    .setLabel("Mensagem do anúncio")
-    .setStyle(TextInputStyle.Paragraph)
-    .setRequired(true);
-
-
-    const linha = new ActionRowBuilder()
-    .addComponents(mensagem);
-
-
-    modal.addComponents(linha);
-
-
-    await interaction.showModal(modal);
-return;
-}
-
-
-    if(interaction.commandName === "ping"){
-
-        return interaction.reply(
-            `🏓 Pong! ${client.ws.ping}ms`
-        );
-
-    }
-
-
-
-    if(interaction.commandName === "anunciar"){
-
         if(!interaction.member.permissions.has("Administrator"))
         return interaction.reply({
             content:"❌ Sem permissão",
@@ -216,22 +170,34 @@ return;
         });
 
 
-        const msg =
-        interaction.options.getString("mensagem");
+        const modal = new ModalBuilder()
+        .setCustomId("anuncio_modal")
+        .setTitle("Enviar anúncio");
 
 
-       const embed = new EmbedBuilder()
-.setColor("#ff0000");
+        const mensagem = new TextInputBuilder()
+        .setCustomId("mensagem_anuncio")
+        .setLabel("Mensagem do anúncio")
+        .setStyle(TextInputStyle.Paragraph)
+        .setRequired(true);
 
 
-await interaction.channel.send({
-    content: msg,
-    embeds:[embed]
-});
-        return interaction.reply({
-            content:"✅",
-            ephemeral:true
-        });
+        const linha = new ActionRowBuilder()
+        .addComponents(mensagem);
+
+
+        modal.addComponents(linha);
+
+
+        return interaction.showModal(modal);
+
+    } 
+
+              if(interaction.commandName === "ping"){
+
+        return interaction.reply(
+            `🏓 Pong! ${client.ws.ping}ms`
+        );
 
     }
 
@@ -259,7 +225,7 @@ await interaction.channel.send({
 
 
         await membro.ban({
-            reason:motivo
+            reason: motivo
         });
 
 
@@ -327,32 +293,10 @@ await interaction.channel.send({
 
     }
 
-if(interaction.isModalSubmit()){
+          });
 
-    if(interaction.customId === "anuncio_modal"){
-
-        const mensagem =
-        interaction.fields.getTextInputValue("mensagem_anuncio");
-
-
-        const embed = new EmbedBuilder()
-        .setColor("#ff0000");
-
-
-        await interaction.channel.send({
-            content: mensagem,
-            embeds:[embed]
-        });
-
-
-        return interaction.reply({
-            content:"✅ Anúncio enviado!",
-            ephemeral:true
-        });
-
-      }
-}
 
 registrar();
+
 
 client.login(TOKEN);
