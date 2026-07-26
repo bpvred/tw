@@ -69,6 +69,15 @@ const commands = [
     .addStringOption(option =>
         option.setName("motivo")
         .setDescription("Motivo")
+        .setRequired(true)),
+
+
+    new SlashCommandBuilder()
+    .setName("anunciar")
+    .setDescription("Envia um anúncio")
+    .addStringOption(option =>
+        option.setName("mensagem")
+        .setDescription("Mensagem do anúncio")
         .setRequired(true))
 
 ];
@@ -124,6 +133,7 @@ client.once("ready", ()=>{
 
 
 
+
 client.on("interactionCreate", async interaction => {
 
 
@@ -141,6 +151,36 @@ client.on("interactionCreate", async interaction => {
 
 
 
+    if(interaction.commandName === "anunciar"){
+
+        if(!interaction.member.permissions.has("Administrator"))
+        return interaction.reply({
+            content:"❌ Sem permissão",
+            ephemeral:true
+        });
+
+
+        const mensagem =
+        interaction.options.getString("mensagem");
+
+
+        await interaction.channel.send({
+            content:
+            `📢 **ANÚNCIO PLAY VÍCIO**\n\n${mensagem}`
+        });
+
+
+        return interaction.reply({
+            content:"✅ Anúncio enviado!",
+            ephemeral:true
+        });
+
+    }
+
+
+
+
+
     if(interaction.commandName === "ban"){
 
 
@@ -153,6 +193,7 @@ client.on("interactionCreate", async interaction => {
 
         const user =
         interaction.options.getUser("usuario");
+
 
         const motivo =
         interaction.options.getString("motivo");
@@ -173,6 +214,7 @@ client.on("interactionCreate", async interaction => {
 
 
     }
+
 
 
 
@@ -209,6 +251,7 @@ client.on("interactionCreate", async interaction => {
 
 
     }
+
 
 
 
