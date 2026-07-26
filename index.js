@@ -5,7 +5,11 @@ const {
     Routes,
     SlashCommandBuilder,
     ActivityType,
-    EmbedBuilder
+    EmbedBuilder,
+    ModalBuilder,
+    TextInputBuilder,
+    TextInputStyle,
+    ActionRowBuilder
 } = require("discord.js");
 
 
