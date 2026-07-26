@@ -122,7 +122,7 @@ client.once("ready",()=>{
     console.log(`TW ONLINE: ${client.user.tag}`);
 
     client.user.setActivity(
-        "Protegendo o servidor ⚡",
+        "Bot Oficial • PlayVício RP",
         {
             type: ActivityType.Watching
         }
