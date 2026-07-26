@@ -132,8 +132,39 @@ client.once("ready",()=>{
 
 client.on("interactionCreate", async interaction => {
 
+
+    if(interaction.isModalSubmit()){
+
+        if(interaction.customId === "anuncio_modal"){
+
+            const mensagem =
+            interaction.fields.getTextInputValue("mensagem_anuncio");
+
+
+            const embed = new EmbedBuilder()
+            .setColor("#ff0000");
+
+
+            await interaction.channel.send({
+                content: mensagem,
+                embeds:[embed]
+            });
+
+
+            return interaction.reply({
+                content:"✅ Anúncio enviado!",
+                ephemeral:true
+            });
+
+        }
+
+    }
+
+
     if(!interaction.isChatInputCommand()) return;
-if(interaction.commandName === "anunciar"){
+
+
+    if(interaction.commandName === "anunciar"){
 
     if(!interaction.member.permissions.has("Administrator"))
     return interaction.reply({
@@ -162,7 +193,7 @@ if(interaction.commandName === "anunciar"){
 
 
     await interaction.showModal(modal);
-
+return;
 }
 
 
