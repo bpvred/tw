@@ -161,16 +161,14 @@ client.on("interactionCreate", async interaction => {
         interaction.options.getString("mensagem");
 
 
-        const embed = new EmbedBuilder()
-        .setColor("#ff0000")
-        .setDescription(msg);
+       const embed = new EmbedBuilder()
+.setColor("#ff0000");
 
 
-        await interaction.channel.send({
-            embeds:[embed]
-        });
-
-
+await interaction.channel.send({
+    content: msg,
+    embeds:[embed]
+});
         return interaction.reply({
             content:"✅",
             ephemeral:true
